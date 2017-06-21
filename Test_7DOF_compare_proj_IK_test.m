@@ -126,8 +126,7 @@ end
   	
     %y_base_L=-L0;%¥ª¤â fullbend
     theta_L=IK_7DOF_FullBend_proj(L0,L1,L2,L3,L4,L5,x_base_L,y_base_L,z_base_L,in_x_end_L,in_y_end_L,in_z_end_L,in_alpha_L,in_beta_L,in_gamma_L,Rednt_alpha_L);
-  
-   
+    theta_L(7)=(0)*(pi/180);
     %forward kinematic
     %theta=[0 0 0 0 0 0 0];
     [out_x_end_R,out_y_end_R,out_z_end_R,out_alpha_R,out_beta_R,out_gamma_R,P_R,RotationM_R] = FK_7DOF(L0,org_upper,org_fore,L5,x_base_R,y_base_R,z_base_R,theta_R);
