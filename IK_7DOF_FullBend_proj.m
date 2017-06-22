@@ -27,7 +27,7 @@ rf_norm=(L3^2+L4^2)^0.5;
 
 theta_tmp=acos((ru_norm^2 + rf_norm^2- norm(V_r_wst)^2) / (2*ru_norm*rf_norm));
 theta(4)=2*pi-atan(L1/L2)-atan(L4/L3)-theta_tmp;
-
+theta4_org=pi-theta_tmp;
 
 V_r_m=(ru_norm^2-rf_norm^2+norm(V_r_wst)^2)/(2*norm(V_r_wst)^2)*V_r_wst;
 
@@ -53,7 +53,7 @@ Vn_u_f=cross(V_r_u,V_r_f)/norm(cross(V_r_u,V_r_f)); %ru 及 rf的法向量
 theat_upoff=atan(L2/L1);
 temp=Rogridues(-theat_upoff,Vn_u_f)*[V_r_u;1];  %旋轉 V_r_u  到V_ru_l1
 V_ru_l1=temp(1:3,1);
-V_ru_l1=V_ru_l1*L1/norm(V_ru_l1) %調整成L1長度
+V_ru_l1=V_ru_l1*L1/norm(V_ru_l1); %調整成L1長度
 
 theta(1)=atan2(V_ru_l1(1),-V_ru_l1(3));
 
@@ -72,15 +72,21 @@ theta(3)=-theta(3);%方向定義的關係 因此會差負號
 
 theta(5)=0;
 
+temp=Ry(-theta(1))*Rx(-theta(2))*Rz(-theta(3))*Ry(-theta4_org)*[V_shx;1]; 
+V_n_x_rot1234=temp(1:3,1);
+
 Vproj_rh_xy = proj_on_plan( V_r_h,V_shx,V_shy);
 Vproj_rf_xy = proj_on_plan( V_r_f,V_shx,V_shy);
-theta(6)=-acos(Vproj_rh_xy'*Vproj_rf_xy/(norm(Vproj_rh_xy)*norm(Vproj_rf_xy))); 
+theta(6)=0.5*pi-acos(Vproj_rh_xy'*Vproj_rf_xy/(norm(Vproj_rh_xy)*norm(Vproj_rf_xy))); 
 
 Vproj_rh_xz = proj_on_plan( V_r_h,V_shx,V_shz);
 Vproj_rf_xz = proj_on_plan( V_r_f,V_shx,V_shz);
-theta(7)=-acos(Vproj_rh_xz'*Vproj_rf_xz/(norm(Vproj_rh_xz)*norm(Vproj_rf_xz))); 
+theta(7)=0.5*pi-acos(Vproj_rh_xz'*Vproj_rf_xz/(norm(Vproj_rh_xz)*norm(Vproj_rf_xz))); 
 theta(6)=0;
 theta(7)=0;
 %theta(7)=gamma;
+
+
+
 
 end
