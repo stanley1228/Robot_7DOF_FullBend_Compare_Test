@@ -4,7 +4,7 @@
 %L3 上臂L型短邊
 %L4 上臂L型長邊
 %L5 end effector
-function theta = IK_7DOF_FullBend_proj(L0,L1,L2,L3,L4,L5,x_base,y_base,z_base,x_end,y_end,z_end,alpha,beta,gamma,Rednt_alpha)
+%function theta = IK_7DOF_FullBend_proj(L0,L1,L2,L3,L4,L5,x_base,y_base,z_base,x_end,y_end,z_end,alpha,beta,gamma,Rednt_alpha)
 %輸出參數
 theta=zeros(1,7);
 
@@ -55,15 +55,15 @@ temp=Rogridues(-theat_upoff,Vn_u_f)*[V_r_u;1];  %旋轉 V_r_u  到V_ru_l1
 V_ru_l1=temp(1:3,1);
 V_ru_l1=V_ru_l1*L1/norm(V_ru_l1); %調整成L1長度
 
-% theta(1)=atan2(V_ru_l1(1),-V_ru_l1(3));org
-theta(1)=atan2(V_ru_l1(1),abs(V_ru_l1(3)));
+theta(1)=atan2(V_ru_l1(1),-V_ru_l1(3));%org
+%theta(1)=atan2(V_ru_l1(1),abs(V_ru_l1(3)));
 
 if theta(1) ~= 0
-    %theta(2)=atan2(-V_ru_l1(2),V_ru_l1(1)/sin(theta(1)));
-    theta(2)=atan2(abs(V_ru_l1(2)),abs(V_ru_l1(1))/sin(theta(1)));
+    theta(2)=atan2(-V_ru_l1(2),V_ru_l1(1)/sin(theta(1)));
+    %theta(2)=atan2(abs(V_ru_l1(2)),abs(V_ru_l1(1))/sin(theta(1)));
 else
-    %theta(2)=atan2(V_ru_l1(2),-V_ru_l1(3));
-    theta(2)=atan2(abs(V_ru_l1(2)),abs(V_ru_l1(3)));
+    theta(2)=atan2(V_ru_l1(2),-V_ru_l1(3));
+    %theta(2)=atan2(abs(V_ru_l1(2)),abs(V_ru_l1(3)));
 end   
 %theta(2)=asin(abs(V_ru_l1(2))/L1);
 
@@ -78,16 +78,19 @@ theta(3)=-theta(3);%方向定義的關係 因此會差負號
 
 
 theta(5)=0;
-t=(Vn_u_f'*V_r_wst-Vn_u_f'*V_r_end)/(norm(Vn_u_f)^2); %在V_r_u,V_r_f平面上，且經過V_r_end點的直線參數式的t
-Vproj_end_ru_rf=V_r_end+t*Vn_u_f;%V_r_end 沿著V_r_u,V_r_f平面法向量投影在平面上的點
+ct=(Vn_u_f'*V_r_wst-Vn_u_f'*V_r_end)/(norm(Vn_u_f)^2); %在V_r_u,V_r_f平面上，且經過V_r_end點的直線參數式的t
+
+Vproj_end_ru_rf=V_r_end+ct*Vn_u_f;%V_r_end 沿著V_r_u,V_r_f平面法向量投影在平面上的點
 
 V_wst_to_projend=Vproj_end_ru_rf-V_r_wst;
 V_wst_to_end=V_r_end-V_r_wst;
 
+V_rf_extend=L5*V_r_f/norm(V_r_f); 
+
 theta(7)=-acos(V_r_f'*V_wst_to_projend/(norm(V_r_f)*norm(V_wst_to_projend)))-(0.5*pi-atan(L4/L3)); 
-theta(6)=-acos(V_wst_to_projend'*V_wst_to_end/norm(V_wst_to_projend)/norm(V_wst_to_end));
-
-
+%theta(7)=-(0.5*pi-atan(L4/L3));
+%theta(6)=acos(abs(V_wst_to_projend'*V_wst_to_end)/norm(V_wst_to_projend)/norm(V_wst_to_end));
+%theta(7)=0
 %theta(7)=0;
 %theta(7)=-acos(( L5^2+norm(V_wst_to_projend)^2-norm(V_rf_to_end)^2 ) /(%2*L5*norm(V_wst_to_projend)) ); %餘弦定理
 
@@ -120,4 +123,4 @@ theta(6)=-acos(V_wst_to_projend'*V_wst_to_end/norm(V_wst_to_projend)/norm(V_wst_
 
 
 
-end
+%end
