@@ -20,7 +20,7 @@ Rednt_alpha=pi/2;
 theta=zeros(1,7);
  %}
 
-function theta = IK_7DOF( L1,L2,L3,x_base,y_base,z_base,x_end,y_end,z_end,alpha,beta,gamma,Rednt_alpha)
+%function theta = IK_7DOF( L1,L2,L3,x_base,y_base,z_base,x_end,y_end,z_end,alpha,beta,gamma,Rednt_alpha)
 %¿é¥X°Ñ¼Æ
 theta=zeros(1,7);
 
@@ -90,4 +90,4 @@ A1_6=A1_5*Rx(theta(6));
 V_temp_h=inv(A1_6)*[V_r_wst_f;1]; 
 theta(7)=atan2(-V_temp_h(1),-V_temp_h(3));
 
-end
+%end

@@ -1,4 +1,4 @@
-function r= Draw_7DOF_compare_point(P_R,RotationM_R,PathPoint_R,P_L,RotationM_L,PathPoint_L)
+function r= Draw_7DOF_compare_point(P_R,RotationM_R,PathPoint_R,P_L,RotationM_L,PathPoint_L,Vproj_end_ru_rf,V_rf_extend,Vn_u_f)
 %DRAW_7DOF_POINT Summary of this function goes here
 %   Detailed explanation goes here\
 %畫非fullbend 及fullbend 的圖做比較 
@@ -26,12 +26,15 @@ cla reset
 
 
 %Path測試用 L0=255; L1=250; L2=250; L3=150;
- AZ=-50;
- EL=40;
- 
-xlim([-200 550]) % 改變 X 軸範圍 
-ylim([-500 500]) % 改變 Y 軸範圍 
-zlim([-400 200]) % 改變 Z 軸範圍 
+%  AZ=-180;
+%  EL=0;
+ AZ=162;
+ EL=15;
+
+%  
+% xlim([-200 550]) % 改變 X 軸範圍 
+% ylim([-500 500]) % 改變 Y 軸範圍 
+% zlim([-400 200]) % 改變 Z 軸範圍 
 
 view(AZ,EL);
 
@@ -59,6 +62,10 @@ for i=1:1:10
         plot3([P_L(i-1,1),P_L(i,1)],[P_L(i-1,2),P_L(i,2)],[P_L(i-1,3),P_L(i,3)],'-k','LineWidth',2);
     end
 end
+
+plot3([P_L(5,1),P_L(7,1)],[P_L(5,2),P_L(7,2)],[P_L(5,3),P_L(7,3)],'--k','LineWidth',2); %基座畫到Joint1  %test
+
+plot3([P_L(3,1),P_L(5,1)],[P_L(3,2),P_L(5,2)],[P_L(3,3),P_L(5,3)],'--k','LineWidth',2); %基座畫到Joint1  %test
 
 %% ========畫原點======== %%
 %畫原點
@@ -93,7 +100,15 @@ for i=1:1:10
   end
 end
 
+%%==畫投影點==%%
+plot3([P_L(7,1),Vproj_end_ru_rf(1)],[P_L(7,2),Vproj_end_ru_rf(2)],[P_L(7,3),Vproj_end_ru_rf(3)],'-k','MarkerSize',2,'Linewidth',1);
 
+%%==畫rf延伸點==%%
+plot3([P_L(7,1),P_L(7,1)+V_rf_extend(1)],[P_L(7,2),P_L(7,2)+V_rf_extend(2)],[P_L(7,3),P_L(7,3)+V_rf_extend(3)],'-b','MarkerSize',2,'Linewidth',1);
+%%==畫Vn_u_f
+Vn_u_f=Vn_u_f*100/norm(Vn_u_f)
+plot3([P_L(5,1),P_L(5,1)+Vn_u_f(1)],[P_L(5,2),P_L(5,2)+Vn_u_f(2)],[P_L(5,3),P_L(5,3)+Vn_u_f(3)],'--b','MarkerSize',2,'Linewidth',1);
+plot3([P_L(7,1),P_L(7,1)+Vn_u_f(1)],[P_L(7,2),P_L(7,2)+Vn_u_f(2)],[P_L(7,3),P_L(7,3)+Vn_u_f(3)],'--b','MarkerSize',2,'Linewidth',1);
 %%  ========畫路徑上的點======== %%
 %Right Arm
 plot3(PathPoint_R(:,1),PathPoint_R(:,2),PathPoint_R(:,3),'mo','MarkerSize',2,'Linewidth',1);
@@ -132,10 +147,11 @@ plot3([P_L(10,1),P_L(10,1)+V_H_hat_z(1,1)],[P_L(10,2),P_L(10,2)+V_H_hat_z(2,1)],
 r=0;
 
 
- axis('equal');%ekXYZ每一格的間距相等
-% xlim([-150 250]) % 改變 X 軸範圍 
-% ylim([-250 100]) % 改變 y 軸範圍 
-% zlim([-300 30]) % 改變 z 軸範圍 
+axis('equal');%ekXYZ每一格的間距相等
+ 
+xlim([-200 650]) % 改變 X 軸範圍 
+ylim([-500 500]) % 改變 Y 軸範圍 
+zlim([-400 200]) % 改變 Z 軸範圍 
 
 
 end
