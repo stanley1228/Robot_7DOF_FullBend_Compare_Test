@@ -28,8 +28,8 @@ cla reset
 %Path測試用 L0=255; L1=250; L2=250; L3=150;
 %  AZ=-180;
 %  EL=0;
- AZ=162;
- EL=15;
+ AZ=88;
+ EL=6;
 
 %  
 % xlim([-200 550]) % 改變 X 軸範圍 
@@ -101,7 +101,7 @@ for i=1:1:10
 end
 
 %%==畫投影點==%%
-plot3([P_L(7,1),Vproj_end_ru_rf(1)],[P_L(7,2),Vproj_end_ru_rf(2)],[P_L(7,3),Vproj_end_ru_rf(3)],'-k','MarkerSize',2,'Linewidth',1);
+plot3([P_L(7,1),Vproj_end_ru_rf(1)],[P_L(7,2),Vproj_end_ru_rf(2)],[P_L(7,3),Vproj_end_ru_rf(3)],'--g','MarkerSize',2,'Linewidth',1);
 
 %%==畫rf延伸點==%%
 plot3([P_L(7,1),P_L(7,1)+V_rf_extend(1)],[P_L(7,2),P_L(7,2)+V_rf_extend(2)],[P_L(7,3),P_L(7,3)+V_rf_extend(3)],'-b','MarkerSize',2,'Linewidth',1);
@@ -109,6 +109,12 @@ plot3([P_L(7,1),P_L(7,1)+V_rf_extend(1)],[P_L(7,2),P_L(7,2)+V_rf_extend(2)],[P_L
 Vn_u_f=Vn_u_f*100/norm(Vn_u_f)
 plot3([P_L(5,1),P_L(5,1)+Vn_u_f(1)],[P_L(5,2),P_L(5,2)+Vn_u_f(2)],[P_L(5,3),P_L(5,3)+Vn_u_f(3)],'--b','MarkerSize',2,'Linewidth',1);
 plot3([P_L(7,1),P_L(7,1)+Vn_u_f(1)],[P_L(7,2),P_L(7,2)+Vn_u_f(2)],[P_L(7,3),P_L(7,3)+Vn_u_f(3)],'--b','MarkerSize',2,'Linewidth',1);
+
+%%==畫末點和法向量 
+plot3([P_R(8,1),P_R(8,1)+Vn_u_f(1)],[P_R(8,2),P_R(8,2)+Vn_u_f(2)],[P_R(8,3),P_R(8,3)+Vn_u_f(3)],'--m','MarkerSize',2,'Linewidth',1);
+
+
+
 %%  ========畫路徑上的點======== %%
 %Right Arm
 plot3(PathPoint_R(:,1),PathPoint_R(:,2),PathPoint_R(:,3),'mo','MarkerSize',2,'Linewidth',1);
