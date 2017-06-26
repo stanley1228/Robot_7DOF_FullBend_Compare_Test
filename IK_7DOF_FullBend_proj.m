@@ -87,9 +87,40 @@ V_wst_to_end=V_r_end-V_r_wst;
 
 V_rf_extend=L5*V_r_f/norm(V_r_f); 
 
-theta(7)=-acos(V_r_f'*V_wst_to_projend/(norm(V_r_f)*norm(V_wst_to_projend)))-(0.5*pi-atan(L4/L3)); 
+%theta(7)=-acos(V_r_f'*V_wst_to_projend/(norm(V_r_f)*norm(V_wst_to_projend)))-(0.5*pi-atan(L4/L3)); 
+%theta(6)=acos(abs(V_wst_to_projend'*V_wst_to_end)/norm(V_wst_to_projend)/norm(V_wst_to_end));
+
+
+%旋轉V_r_f 到 V_rf_l4
+theat_lowoff=atan(L3/L4);
+temp=Rogridues(theat_lowoff,Vn_u_f)*[V_r_f;1];  %旋轉 V_r_f  V_rf_l4
+V_rf_l4=temp(1:3,1);
+V_rf_l4=V_rf_l4*L4/norm(V_rf_l4); %調整成L4長度
+
+%V_n_rfl4 及V_n_rf形成的平面 的法向量
+Vn_rfl4_nuf=cross(V_rf_l4,Vn_u_f)/norm(cross(V_rf_l4,Vn_u_f));
+t_rfl4_nuf=(Vn_rfl4_nuf'*V_r_wst-Vn_rfl4_nuf'*V_r_end)/(norm(Vn_rfl4_nuf)^2); %V_n_rf,V_n_rfl4平面上，且經過V_r_end點的直線參數式的t 為rfl4_nuf
+Vproj_end_rfl4_nuf=V_r_end+t_rfl4_nuf*Vn_rfl4_nuf;%V_r_end 沿著V_n_rfl4,V_n_rf平面法向量投影在平面上的點
+V_wst_to_projend_rfl4_nuf=Vproj_end_rfl4_nuf-V_r_wst;
+
+%防止在acos(1.000000.....)的時候會出現虛部的情況
+temp=V_rf_l4'*V_wst_to_projend_rfl4_nuf/norm(V_rf_l4)/norm(V_wst_to_projend_rfl4_nuf);
+if abs(temp-1)<1.e-7
+    temp=1;
+end
+theta(6)=-acos(temp); 
+
+
+theta(7)=-acos(V_wst_to_projend_rfl4_nuf'*V_wst_to_end/norm(V_wst_to_projend_rfl4_nuf)/norm(V_wst_to_end));
+
+%測試redundant左右手角度，這兩軸要相反
+%theta(3)=-theta(3);
+%theta(6)=-theta(6);
+%theta(6)=0
+%theta(7)=0
 %theta(7)=-(0.5*pi-atan(L4/L3));
 %theta(6)=acos(abs(V_wst_to_projend'*V_wst_to_end)/norm(V_wst_to_projend)/norm(V_wst_to_end));
+
 %theta(7)=0
 %theta(7)=0;
 %theta(7)=-acos(( L5^2+norm(V_wst_to_projend)^2-norm(V_rf_to_end)^2 ) /(%2*L5*norm(V_wst_to_projend)) ); %餘弦定理
