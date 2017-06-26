@@ -19,7 +19,7 @@ y_base_L=0;
 z_base_L=0;
 
 
-DEF_DESCRETE_POINT=90;
+DEF_DESCRETE_POINT=1;
 
 %{
 P7=[71.3397;-5.0000;0]
@@ -83,7 +83,7 @@ end
 %         Path(t,1:3)=O+(Q-O)*(t-1)/DEF_DESCRETE_POINT;
 %  end
 
-%for t=1:1:DEF_DESCRETE_POINT
+for t=1:1:DEF_DESCRETE_POINT
  
     %輸入參數
     in_x_end_R=Path_R(t,1);
@@ -102,8 +102,8 @@ end
     in_beta_L=0*(t/DEF_DESCRETE_POINT)*(pi/180);
     in_gamma_L=0*(t/DEF_DESCRETE_POINT)*(pi/180);
 
-    Rednt_alpha_R=(-90)*(pi/180);
-    Rednt_alpha_L=(-90)*(pi/180);
+    Rednt_alpha_R=(-60)*(pi/180);
+    Rednt_alpha_L=(-60)*(pi/180);
     %輸出參數 initial
     %theta=zeros(1,7);
     
@@ -113,38 +113,77 @@ end
     %inverse kinematic
     %y_base_R=-L0;%右手 original
     
-    L0=0;     %頭到肩膀
-    L1=250;   %L型 長邊
-    L2=50;    %L型 短邊
-    L3=50;    %L型 短邊
-    L4=250;   %L型 長邊 
-    L5=150;   %到end-effector
+    L0n=0;     %頭到肩膀
+    L1n=250;   %L型 長邊
+    L2n=50;    %L型 短邊
+    L3n=50;    %L型 短邊
+    L4n=250;   %L型 長邊 
+    L5n=150;   %到end-effector
    
-    org_upper=(L1^2+L2^2)^0.5;
-    org_fore=(L3^2+L4^2)^0.5;
-    theta_R=IK_7DOF(org_upper,org_fore,L5,x_base_R,y_base_R,z_base_R,in_x_end_R,in_y_end_R,in_z_end_R,in_alpha_R,in_beta_R,in_gamma_R,Rednt_alpha_R);
+    org_upper=(L1n^2+L2n^2)^0.5;
+    org_fore=(L3n^2+L4n^2)^0.5;
+    % theta_R=IK_7DOF(org_upper,org_fore,L5,x_base_R,y_base_R,z_base_R,in_x_end_R,in_y_end_R,in_z_end_R,in_alpha_R,in_beta_R,in_gamma_R,Rednt_alpha_R)
+    L1=org_upper;
+    L2=org_fore;
+    L3=L5n;
+    x_base=x_base_R;
+    y_base=y_base_R;
+    z_base=z_base_R;
+    x_end=in_x_end_R;
+    y_end=in_y_end_R;
+    z_end=in_z_end_R;
+    alpha=in_alpha_R;
+    beta=in_beta_R;
+    gamma=in_gamma_R;
+    Rednt_alpha=Rednt_alpha_R;
+    IK_7DOF
+    theta_R=theta;
   	
     %y_base_L=-L0;%左手 fullbend
-    theta_L=IK_7DOF_FullBend_proj(L0,L1,L2,L3,L4,L5,x_base_L,y_base_L,z_base_L,in_x_end_L,in_y_end_L,in_z_end_L,in_alpha_L,in_beta_L,in_gamma_L,Rednt_alpha_L);
-    theta_L(7)=(0)*(pi/180);
+    % theta_L=IK_7DOF_FullBend_proj(L0,L1,L2,L3,L4,L5,x_base_L,y_base_L,z_base_L,in_x_end_L,in_y_end_L,in_z_end_L,in_alpha_L,in_beta_L,in_gamma_L,Rednt_alpha_L)
+    %IK_7DOF_FullBend_proj(L0,L1,L2,L3,L4,L5,x_base,y_base,z_base,x_end,y_end,z_end,alpha,beta,gamma,Rednt_alpha)
+    L0=L0n;
+    L1=L1n;
+    L2=L2n;
+    L3=L3n;
+    L4=L4n;
+    L5=L5n;
+    x_base=x_base_L;
+    y_base=y_base_L;
+    z_base=z_base_L;
+    x_end=in_x_end_L;
+    y_end=in_y_end_L;
+    z_end=in_z_end_L;
+    alpha=in_alpha_L;
+    beta=in_beta_L;
+    gamma=in_gamma_L;
+    Rednt_alpha=Rednt_alpha_L;
+    IK_7DOF_FullBend_proj
+    theta_L=theta;
+    %theta_L(7)=-40*(pi/180);
+    %theta_L(6)=90*(pi/180);
+
     %forward kinematic
     %theta=[0 0 0 0 0 0 0];
-    [out_x_end_R,out_y_end_R,out_z_end_R,out_alpha_R,out_beta_R,out_gamma_R,P_R,RotationM_R] = FK_7DOF(L0,org_upper,org_fore,L5,x_base_R,y_base_R,z_base_R,theta_R);
-    [out_x_end_L,out_y_end_L,out_z_end_L,out_alpha_L,out_beta_L,out_gamma_L,P_L,RotationM_L] = FK_7DOF_FullBend(L0,L1,L2,L3,L4,L5,x_base_L,y_base_L,z_base_L,theta_L);
+    %theta_L(7)=0
+    [out_x_end_R,out_y_end_R,out_z_end_R,out_alpha_R,out_beta_R,out_gamma_R,P_R,RotationM_R] = FK_7DOF(L0n,org_upper,org_fore,L5n,x_base_R,y_base_R,z_base_R,theta_R);
+    [out_x_end_L,out_y_end_L,out_z_end_L,out_alpha_L,out_beta_L,out_gamma_L,P_L,RotationM_L] = FK_7DOF_FullBend(L0n,L1n,L2n,L3n,L4n,L5n,x_base_L,y_base_L,z_base_L,theta_L);
     
     %記錄路徑上的點
     PathPoint_R(t,1:3)=[out_x_end_R out_y_end_R out_z_end_R];
     PathPoint_L(t,1:3)=[out_x_end_L out_y_end_L out_z_end_L];
     
+    
     %畫關節點圖
-    Draw_7DOF_compare_point(P_R,RotationM_R,PathPoint_R,P_L,RotationM_L,PathPoint_L);
+    Draw_7DOF_compare_point(P_R,RotationM_R,PathPoint_R,P_L,RotationM_L,PathPoint_L,Vproj_end_ru_rf,V_rf_extend,Vn_u_f,V_rf_l4,Vn_rfl4_nuf,Vproj_end_rfl4_nuf);
    
     %記錄每軸角度變化
+  
     PathTheta_R(t,1:7)=theta_R*(180/pi);
     PathTheta_L(t,1:7)=theta_L*(180/pi);
     
-    In_R=[in_x_end_R in_y_end_R in_z_end_R in_alpha_R in_beta_R in_gamma_R]
-    Out_R=[out_x_end_R out_y_end_R out_z_end_R out_alpha_R out_beta_R out_gamma_R]
+    In_R=[in_x_end_R in_y_end_R in_z_end_R in_alpha_R in_beta_R in_gamma_R];
+    Out_R=[out_x_end_R out_y_end_R out_z_end_R out_alpha_R out_beta_R out_gamma_R];
     
     In_L=[in_x_end_L in_y_end_L in_z_end_L in_alpha_L in_beta_L in_gamma_L]
     Out_L=[out_x_end_L out_y_end_L out_z_end_L out_alpha_L out_beta_L out_gamma_L]
@@ -161,7 +200,7 @@ end
 %     end
     
     pause(0.1);
-%end
+end
 
  %畫JointAngle
 %  Draw_7DOF_JointAnglePath(PathTheta);
