@@ -68,7 +68,7 @@ end
 %theta(2)=asin(abs(V_ru_l1(2))/L1);
 
 
-%算第3軸
+%%算第3軸
 %看shy(V_r_u,V_r_f的法向量)經過1,2軸旋轉後  與V_r_u,V_r_f 需要第3軸轉多少
 V_n_yrot12=Ry(-theta(1))*Rx(-theta(2))*[-V_shy;1];  %方向定義的關係 因此會差theta1 theta2多負號
 V_n_yrot12=V_n_yrot12(1:3,1);
@@ -103,17 +103,44 @@ t_rfl4_nuf=(Vn_rfl4_nuf'*V_r_wst-Vn_rfl4_nuf'*V_r_end)/(norm(Vn_rfl4_nuf)^2); %V
 Vproj_end_rfl4_nuf=V_r_end+t_rfl4_nuf*Vn_rfl4_nuf;%V_r_end 沿著V_n_rfl4,V_n_rf平面法向量投影在平面上的點
 V_wst_to_projend_rfl4_nuf=Vproj_end_rfl4_nuf-V_r_wst;
 
+%% 算第6軸
 %防止在acos(1.000000.....)的時候會出現虛部的情況
 temp=V_rf_l4'*V_wst_to_projend_rfl4_nuf/norm(V_rf_l4)/norm(V_wst_to_projend_rfl4_nuf);
-if abs(temp-1)<1.e-7
-    temp=1;
+if abs(temp-1)<1.e-7 
+   if temp >0
+       temp=1;
+   else
+       temp=-1;
+   end
 end
-theta(6)=-acos(temp); 
+
+%平面法向量 和 Vn_rfl4_nuf  同邊要加負號  判斷theta6要往上或往下轉
+Vn_rfl4_WstToProjEndRfl4Nuf=cross(V_rf_l4/norm(V_rf_l4),V_wst_to_projend_rfl4_nuf/norm(V_wst_to_projend_rfl4_nuf));
+Vn_rfl4_WstToProjEndRfl4Nuf=Vn_rfl4_WstToProjEndRfl4Nuf/norm(Vn_rfl4_WstToProjEndRfl4Nuf);
+if norm(Vn_rfl4_WstToProjEndRfl4Nuf - Vn_rfl4_nuf) < 1.e-7
+    theta(6)=-acos(temp); 
+else
+    theta(6)=acos(temp); 
+end
 
 
-theta(7)=-acos(V_wst_to_projend_rfl4_nuf'*V_wst_to_end/norm(V_wst_to_projend_rfl4_nuf)/norm(V_wst_to_end));
+%% 算第7軸
+temp=Rogridues(-theta(6),Vn_rfl4_nuf)*[Vn_u_f;1]; 
+Vn_nuf_rotx6_along_NRfl4Nuf=temp(1:3,1);%nuf 沿著 Vn_rfl4_nuf 旋轉第6軸角度得到投影點與目標點平面的法向量
+Vn_nuf_rotx6_along_NRfl4Nuf=Vn_nuf_rotx6_along_NRfl4Nuf/norm(Vn_nuf_rotx6_along_NRfl4Nuf);
+Vn_WstToEnd_WstToProjEndRfl4Nuf=cross(V_wst_to_end,V_wst_to_projend_rfl4_nuf);%V_wst_to_projend 和 V_wst_to_end的法向量
+Vn_WstToEnd_WstToProjEndRfl4Nuf=Vn_WstToEnd_WstToProjEndRfl4Nuf/norm(Vn_WstToEnd_WstToProjEndRfl4Nuf);
 
-%測試redundant左右手角度，這兩軸要相反
+%利用法向量方向 判斷theta7旋轉方向
+temp=V_wst_to_projend_rfl4_nuf'*V_wst_to_end/norm(V_wst_to_projend_rfl4_nuf)/norm(V_wst_to_end);
+if norm(Vn_WstToEnd_WstToProjEndRfl4Nuf - Vn_nuf_rotx6_along_NRfl4Nuf) < 1.e-7
+    theta(7)=-acos(temp); 
+else
+    theta(7)=acos(temp); 
+end
+    
+
+%% 測試redundant左右手角度，這兩軸要相反
 %theta(3)=-theta(3);
 %theta(6)=-theta(6);
 %theta(6)=0
