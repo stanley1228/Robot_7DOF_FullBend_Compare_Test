@@ -56,27 +56,34 @@ V_ru_l1=temp(1:3,1);
 V_ru_l1=V_ru_l1*L1/norm(V_ru_l1); %調整成L1長度
 
 theta(1)=atan2(V_ru_l1(1),-V_ru_l1(3));%org
-%theta(1)=atan2(V_ru_l1(1),abs(V_ru_l1(3)));
 
 if theta(1) ~= 0
     theta(2)=atan2(-V_ru_l1(2),V_ru_l1(1)/sin(theta(1)));
-    %theta(2)=atan2(abs(V_ru_l1(2)),abs(V_ru_l1(1))/sin(theta(1)));
 else
-    theta(2)=atan2(V_ru_l1(2),-V_ru_l1(3));
-    %theta(2)=atan2(abs(V_ru_l1(2)),abs(V_ru_l1(3)));
+    theta(2)=atan2(V_ru_l1(2),-V_ru_l1(3));   
 end   
-%theta(2)=asin(abs(V_ru_l1(2))/L1);
 
 
-%%算第3軸
+%% ==算第3軸
 %看shy(V_r_u,V_r_f的法向量)經過1,2軸旋轉後  與V_r_u,V_r_f 需要第3軸轉多少
+
 V_n_yrot12=Ry(-theta(1))*Rx(-theta(2))*[-V_shy;1];  %方向定義的關係 因此會差theta1 theta2多負號
 V_n_yrot12=V_n_yrot12(1:3,1);
-%theta(3)=acos(V_n_yrot12'*Vn_u_f/(norm(V_n_yrot12)*norm(Vn_u_f))); 
-theta(3)=acos(V_n_yrot12'*Vn_u_f/(norm(V_n_yrot12)*norm(Vn_u_f))); 
-theta(3)=-theta(3);%方向定義的關係 因此會差負號
 
+Vn_nuf_nyrot12=cross(Vn_u_f,V_n_yrot12);
+Vn_nuf_nyrot12=Vn_nuf_nyrot12/norm(Vn_nuf_nyrot12);
 
+temp=V_n_yrot12'*Vn_u_f/norm(V_n_yrot12)/norm(Vn_u_f); 
+
+%Vn_u_f 和 V_n_yrot12的法向量   與 V_ru_l1同方向 theta(3)需要加負號
+if norm(Vn_nuf_nyrot12 - V_ru_l1/norm(V_ru_l1)) < 1.e-7
+    theta(3)=-acos(temp)
+else
+    theta(3)=acos(temp)
+end
+%theta(3)=-theta(3);%方向定義的關係 因此會差負號
+
+%% ==算第5軸
 theta(5)=0;
 ct=(Vn_u_f'*V_r_wst-Vn_u_f'*V_r_end)/(norm(Vn_u_f)^2); %在V_r_u,V_r_f平面上，且經過V_r_end點的直線參數式的t
 
