@@ -1,4 +1,4 @@
-function r= Draw_7DOF_compare_point(P_R,RotationM_R,PathPoint_R,P_L,RotationM_L,PathPoint_L,Vproj_end_ru_rf,V_rf_extend,Vn_u_f,V_rf_l4,Vn_rfl4_nuf,Vproj_end_rfl4_nuf)
+function r= Draw_7DOF_compare_point(P_R,RotationM_R,PathPoint_R,P_L,RotationM_L,PathPoint_L,Vproj_end_ru_rf,V_rf_extend,Vn_u_f,V_rf_l4,Vn_rfl4_nuf,Vproj_end_rfl4_nuf,Vn_nuf_rotx6_along_NRfl4Nuf,Vn_WstToEnd_WstToProjEndRfl4Nuf)
 %DRAW_7DOF_POINT Summary of this function goes here
 %   Detailed explanation goes here\
 %畫非fullbend 及fullbend 的圖做比較 
@@ -28,8 +28,8 @@ cla reset
 %Path測試用 L0=255; L1=250; L2=250; L3=150;
 %  AZ=-180;
 %  EL=0;
- AZ=-63;
- EL=28;
+ AZ=-60;
+ EL=30;
 
 %  
 % xlim([-200 550]) % 改變 X 軸範圍 
@@ -114,7 +114,7 @@ V_rf_l4_Length=V_rf_l4*100;
 plot3([P_L(7,1),P_L(7,1)+V_rf_l4_Length(1)],[P_L(7,2),P_L(7,2)+V_rf_l4_Length(2)],[P_L(7,3),P_L(7,3)+V_rf_l4_Length(3)],'--b','MarkerSize',2,'Linewidth',1);
 
 %%==畫Vn_rf  及Vr_l11平面的法向量==%%
-Vn_rfl4_nuf_Length=Vn_rfl4_nuf*200;
+Vn_rfl4_nuf_Length=Vn_rfl4_nuf/norm(Vn_rfl4_nuf)*200;
 plot3([P_L(7,1),P_L(7,1)+Vn_rfl4_nuf_Length(1)],[P_L(7,2),P_L(7,2)+Vn_rfl4_nuf_Length(2)],[P_L(7,3),P_L(7,3)+Vn_rfl4_nuf_Length(3)],'--b','MarkerSize',2,'Linewidth',1);
 
 %%==畫Vn_u_f
@@ -122,12 +122,22 @@ Vn_u_f=Vn_u_f*100/norm(Vn_u_f);
 plot3([P_L(5,1),P_L(5,1)+Vn_u_f(1)],[P_L(5,2),P_L(5,2)+Vn_u_f(2)],[P_L(5,3),P_L(5,3)+Vn_u_f(3)],'--b','MarkerSize',2,'Linewidth',1);
 plot3([P_L(7,1),P_L(7,1)+Vn_u_f(1)],[P_L(7,2),P_L(7,2)+Vn_u_f(2)],[P_L(7,3),P_L(7,3)+Vn_u_f(3)],'--b','MarkerSize',2,'Linewidth',1);
 
+%%==畫Vn_nuf_rotx6_along_NRfl4Nuf
+Vn_nuf_rotx6_along_NRfl4Nuf=Vn_nuf_rotx6_along_NRfl4Nuf*100/norm(Vn_nuf_rotx6_along_NRfl4Nuf);
+plot3([P_L(7,1),P_L(7,1)+Vn_nuf_rotx6_along_NRfl4Nuf(1)],[P_L(7,2),P_L(7,2)+Vn_nuf_rotx6_along_NRfl4Nuf(2)],[P_L(7,3),P_L(7,3)+Vn_nuf_rotx6_along_NRfl4Nuf(3)],'--m','MarkerSize',2,'Linewidth',1);
+
+%%==畫Vn_WstToProjEnd_WstToEnd
+Vn_WstToEnd_WstToProjEndRfl4Nuf=Vn_WstToEnd_WstToProjEndRfl4Nuf*200/norm(Vn_WstToEnd_WstToProjEndRfl4Nuf);
+plot3([P_L(7,1),P_L(7,1)+Vn_WstToEnd_WstToProjEndRfl4Nuf(1)],[P_L(7,2),P_L(7,2)+Vn_WstToEnd_WstToProjEndRfl4Nuf(2)],[P_L(7,3),P_L(7,3)+Vn_WstToEnd_WstToProjEndRfl4Nuf(3)],'--g','MarkerSize',2,'Linewidth',1);
+
 %%==畫末點和法向量 Vn_u_f
 %plot3([P_R(8,1),P_R(8,1)+Vn_u_f(1)],[P_R(8,2),P_R(8,2)+Vn_u_f(2)],[P_R(8,3),P_R(8,3)+Vn_u_f(3)],'--m','MarkerSize',2,'Linewidth',1);
 
 %%==畫末點和法向量 Vn_rfl4_nuf
 Vn_rfl4_nuf_Length=Vn_rfl4_nuf*200;
 plot3([P_R(8,1),P_R(8,1)-Vn_rfl4_nuf_Length(1)],[P_R(8,2),P_R(8,2)-Vn_rfl4_nuf_Length(2)],[P_R(8,3),P_R(8,3)-Vn_rfl4_nuf_Length(3)],'--m','MarkerSize',2,'Linewidth',1);
+
+
 
 %%  ========畫路徑上的點======== %%
 %Right Arm
