@@ -19,7 +19,7 @@ y_base_L=0;
 z_base_L=0;
 
 
-DEF_DESCRETE_POINT=1;
+DEF_DESCRETE_POINT=90;
 
 %{
 P7=[71.3397;-5.0000;0]
@@ -102,8 +102,8 @@ for t=1:1:DEF_DESCRETE_POINT
     in_beta_L=0*(t/DEF_DESCRETE_POINT)*(pi/180);
     in_gamma_L=0*(t/DEF_DESCRETE_POINT)*(pi/180);
 
-    Rednt_alpha_R=(-60)*(pi/180);
-    Rednt_alpha_L=(-60)*(pi/180);
+    Rednt_alpha_R=(90)*(pi/180);
+    Rednt_alpha_L=(90)*(pi/180);
     %輸出參數 initial
     %theta=zeros(1,7);
     
@@ -160,9 +160,9 @@ for t=1:1:DEF_DESCRETE_POINT
     Rednt_alpha=Rednt_alpha_L;
     IK_7DOF_FullBend_proj
     theta_L=theta;
-    %theta_L(7)=-40*(pi/180);
-    %theta_L(6)=90*(pi/180);
-
+    %theta_L(7)=0*(pi/180);
+    %theta_L(6)=0*(pi/180);
+    theta_L(3)=-theta_L(3);
     %forward kinematic
     %theta=[0 0 0 0 0 0 0];
     %theta_L(7)=0
@@ -175,10 +175,9 @@ for t=1:1:DEF_DESCRETE_POINT
     
     
     %畫關節點圖
-    Draw_7DOF_compare_point(P_R,RotationM_R,PathPoint_R,P_L,RotationM_L,PathPoint_L,Vproj_end_ru_rf,V_rf_extend,Vn_u_f,V_rf_l4,Vn_rfl4_nuf,Vproj_end_rfl4_nuf);
+    Draw_7DOF_compare_point(P_R,RotationM_R,PathPoint_R,P_L,RotationM_L,PathPoint_L,Vproj_end_ru_rf,V_rf_extend,Vn_u_f,V_rf_l4,Vn_rfl4_nuf,Vproj_end_rfl4_nuf,Vn_nuf_rotx6_along_NRfl4Nuf,Vn_WstToEnd_WstToProjEndRfl4Nuf);
    
     %記錄每軸角度變化
-  
     PathTheta_R(t,1:7)=theta_R*(180/pi);
     PathTheta_L(t,1:7)=theta_L*(180/pi);
     
